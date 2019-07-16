@@ -562,7 +562,23 @@ class Model {
 
 	function __get($field)
     {
-    	if(!isset( $this->data[ $field ] )) $value = '';
+		if(!isset( $this->data[ $field ] ))
+		{
+			$value = '';
+			$defField = array_search( $field, $this->propertiesDefinition );
+			if ( $defField !== false && $this->data[ $defField ] )
+			{
+				$value = $this->data[ $defField ];
+			}
+			else
+			{
+				$relation = $this->getRelation( $field );
+				if ( $relation )
+				{
+					return $relation;
+				}
+			}
+		}
 		else
  		$value = $this->data[ $field ];
 
